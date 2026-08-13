@@ -1,0 +1,7 @@
+interface:
+  display_name: "业务应用程序建模"
+  short_description: "从现实业务活动逐步建立系统职责、信息结构与数据库模式"
+  default_prompt: "使用 $business-application-modeling 为这个业务应用完成需求、用例、活动和信息结构建模。"
+
+policy:
+  allow_implicit_invocation: false
