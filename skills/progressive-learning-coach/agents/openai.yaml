@@ -1,0 +1,7 @@
+interface:
+  display_name: "渐进式学习教练"
+  short_description: "从陌生破冰到刻意练习，逐步学会并独立使用一项具体技能"
+  default_prompt: "使用 $progressive-learning-coach 带我从当前基础开始学习这项技能，并逐步练到能够独立使用。"
+
+policy:
+  allow_implicit_invocation: true
