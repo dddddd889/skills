@@ -12,6 +12,8 @@ skills/
     SKILL.md
   deep-dive-learning/   # 技术深度调研 / 系统学习模板
     SKILL.md
+  design-plan-review/   # 反复扫描对齐文档，Agent 对抗查找设计遗漏
+    SKILL.md
   progressive-learning-coach/ # 从陌生破冰到能够独立使用一项技能
     SKILL.md
   work-with-understanding/ # 边做边理解、任务记录与主动复盘
@@ -25,6 +27,7 @@ skills/
 | `business-application-modeling` | 从现实业务活动出发，完成需求与信息建模，再定义运行环境、软件整体结构、构件接口和数据库模式 |
 | `concept-explainer` | 写文档遇到名词/概念时，优先用时序图、架构图、穷尽场景路径讲清楚定位，其次才用文字 + 具体场景补充 |
 | `deep-dive-learning` | 系统调研一项技术时，按"背景与目的 → 优劣权衡 → 使用场景 → 组成与关键点 → 底层原理 → 对比"六步展开，并做联想 / 抽象 / 自省与归纳总结 |
+| `design-plan-review` | 审查已有方案和落地计划：先反复扫描当前文档、上下文和上下游以解决矛盾，再由两个 Agent 对抗补漏；修订后重复，直到对齐且无新遗漏 |
 | `progressive-learning-coach` | 通过破冰讲解、示范模仿、刻意练习和迁移验证，把一项陌生技能逐步学到能够独立使用 |
 | `work-with-understanding` | 从任务开始按情况澄清、比较方案、执行和检查理解，沉淀任务记录，并复盘用户指定的 1～2 件事 |
 
