@@ -2,3 +2,6 @@ interface:
   display_name: "方案与计划审查"
   short_description: "反复扫描对齐文档，再通过两个 Agent 相互质疑查找设计遗漏"
   default_prompt: "使用 $design-plan-review 审查已有方案和落地计划：先扫描对齐当前文档、上下文和上下游，再让 A、B 对抗补漏；修订后重复，直到扫描无冲突且对抗无新遗漏。"
+
+policy:
+  allow_implicit_invocation: false

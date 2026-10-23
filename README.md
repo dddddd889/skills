@@ -15,7 +15,7 @@ skills/
   design-plan-review/   # 反复扫描对齐文档，Agent 对抗查找设计遗漏
     README.md          # 流程图、结束条件及 Agent 配置入口
     SKILL.md
-    agents/            # 技能展示信息，以及主动调用 A、B 时传入的角色指令
+    agents/            # 技能展示信息，以及审查 A、B 的原生 Codex Agent 定义
   progressive-learning-coach/ # 从陌生破冰到能够独立使用一项技能
     SKILL.md
   work-with-understanding/ # 边做边理解、任务记录与主动复盘
@@ -46,11 +46,9 @@ npx skills add <你的github>/skills --skill concept-explainer
 npx skills add <你的github>/skills --skill deep-dive-learning -a claude-code -a codex
 ```
 
-`design-plan-review` 安装后，由主 Agent 读取技能附带的 A、B 完整角色指令并主动创建两个真实子 Agent，不需要另行注册或复制配置：
+`design-plan-review` 的 A、B 原生 Codex Agent 定义随技能一起提供。仅安装 skill 不会注册子 Agent；在其他项目使用原生调用名时，将技能目录内的 `agents/design-plan-proponent.toml` 和 `agents/design-plan-challenger.toml` 复制到该项目的 `.codex/agents/`，并新建会话。本仓库的 `.codex/agents/` 已安装这两个定义；更新定义时同步技能内和项目内的文件。
 
-```bash
-npx skills add dddddd889/skills --skill design-plan-review --agent codex
-```
+该技能仅由用户显式选择或通过 `$design-plan-review` 调用，关闭自动匹配触发。
 
 ## 新增技能
 
