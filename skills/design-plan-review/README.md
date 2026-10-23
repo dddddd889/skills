@@ -7,6 +7,22 @@
 
 主 Agent 组织审查、汇总问题和统一修订，不从零生成方案和计划。具体执行规则见 [SKILL.md](SKILL.md)。
 
+## 安装与使用
+
+在目标项目根目录执行：
+
+```bash
+npx skills add dddddd889/skills --skill design-plan-review --agent codex
+```
+
+安装后即可使用，无需手动复制 A、B 配置。给 Codex 以下请求，主 Agent 会先扫描，再主动创建并调用两个真实子 Agent：
+
+```text
+$design-plan-review
+审查以下已有方案和落地计划：……
+相关需求、上下文和上下游文档：……
+```
+
 ## 流程图
 
 ```mermaid
@@ -15,7 +31,7 @@ graph TD;
     scan["主 Agent 完整扫描当前文档、上下文和上下游"];
     conflict{"存在冲突、矛盾或约定未对齐？"};
     align["主 Agent 统一修正不一致"];
-    call["主 Agent 每轮重新调用 A、B，提供同一最新版本"];
+    call["主 Agent 主动创建或重新调用 A、B，提供同一最新版本"];
     debate["A、B 先独立审查，再相互质疑：B 提反例，A 回应，B 复核"];
     omission{"仍有有效遗漏或待确认问题？"};
     patch["主 Agent 补充文档；缺少依据时先补齐信息或确认决策"];
@@ -37,9 +53,9 @@ graph TD;
 
 结束前必须同时满足：已确认问题全部解决并复核；最新版本完整扫描无冲突；随后 A、B 实际完成质疑、回应和复核，未发现新有效遗漏。缺少材料、决策或真实 Agent 回执时，不能报告通过。
 
-## A、B 的配置
+## A、B 的角色指令
 
-- A：[`design_plan_proponent`](agents/design-plan-proponent.toml)，推演业务闭环，回应质疑。
-- B：[`design_plan_challenger`](agents/design-plan-challenger.toml)，挑战假设，找反例和遗漏。
+- A：[推演业务闭环，回应质疑](agents/design-plan-proponent.toml)。
+- B：[挑战假设，找反例和遗漏](agents/design-plan-challenger.toml)。
 
-这两个 TOML 文件是原生 Codex Agent 定义。`agents/openai.yaml` 是技能展示配置。项目安装和实际调用方式见 [SKILL.md 的子 Agent 说明](SKILL.md#codex-子-agent-定义与调用)。
+主 Agent 读取这两个文件的完整 `developer_instructions`，传给动态创建的通用子 Agent。不依赖已注册的原生角色，不修改 `.codex/agents/` 或全局配置。实际调用方式见 [SKILL.md](SKILL.md#主动创建并调用-ab)。

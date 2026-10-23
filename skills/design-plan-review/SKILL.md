@@ -24,20 +24,27 @@ description: "审查已有方案、设计文档和落地计划：反复扫描当
 
 A 可以承认并补充自己发现的遗漏，不为维护原方案强行辩护。两者不能只分别输出意见；主 Agent 必须交换它们的结论，组织回应与追问。
 
-## Codex 子 Agent 定义与调用
+## 主动创建并调用 A、B
 
-本技能附带两个原生 Codex 自定义 Agent 定义：
+进入本技能后，主 Agent 按流程主动调用子 Agent，不要求用户额外说“开两个 Agent”或先安装角色配置。角色指令随技能提供：
 
-- A：[`agents/design-plan-proponent.toml`](agents/design-plan-proponent.toml)，调用名 `design_plan_proponent`。
-- B：[`agents/design-plan-challenger.toml`](agents/design-plan-challenger.toml)，调用名 `design_plan_challenger`。
+- A：[`agents/design-plan-proponent.toml`](agents/design-plan-proponent.toml) 的 `developer_instructions`，负责推演和回应。
+- B：[`agents/design-plan-challenger.toml`](agents/design-plan-challenger.toml) 的 `developer_instructions`，负责反例和追问。
 
-`agents/openai.yaml` 只定义技能展示信息，不注册子 Agent。Codex 从项目 `.codex/agents/` 或个人 `~/.codex/agents/` 读取上述 TOML 格式；仅安装技能目录不会自动注册它们。本仓库的 `.codex/agents/` 已安装这两个定义的普通文件副本；更新角色指令时同步这两个位置。
+从当前加载的 `SKILL.md` 所在目录解析这些相对路径，不能写死仓库或个人安装路径。使用子 Agent 工具主动派生两个真实的通用子 Agent，并把对应角色的完整 `developer_instructions` 和本轮任务一起作为消息传入；不要只发送 TOML 路径、角色名或一句职责摘要。
 
-首次在其他项目使用时，将上述两个 TOML 文件安装到目标项目的 `.codex/agents/`，不覆盖已有不同定义、不自动写入个人全局配置；新建会话确认能够调用这两个名称。原生配置格式依据：[OpenAI 官方子 Agent 文档](https://learn.chatgpt.com/docs/agent-configuration/subagents#custom-agents)。
+首次派生按下面的参数含义调用，使用当前环境工具的等价字段：
 
-执行对抗阶段时，优先按这两个调用名派生真实子 Agent。如果当前工具只支持通用子 Agent，则读取对应 TOML 的 `developer_instructions`，将完整指令和本轮材料一起传给两个真实子 Agent；这属于显式指令调用，不能声称已经加载原生配置。两种方式都继承主 Agent 的模型和推理设置。
+- 创建两个独立任务，如 `design_plan_review_a` 和 `design_plan_review_b`。
+- 省略自定义角色选择参数，不依赖 `design_plan_proponent` 或 `design_plan_challenger` 已被注册。
+- 使用不复制父历史的方式（如 `fork_turns="none"`），显式传入相同的材料位置或正文、上下文、版本、允许操作范围及已有问题清单。两者独立检查前不提供对方的结论。
+- 不指定模型和推理强度，沿用主 Agent 设置；子 Agent 只读且不再派生下级。
 
-主 Agent 保存两个子 Agent 的实际 ID：等待各自首轮结果，将 B 的质疑发送给 A，再将 A 的回应发送给 B；需要时继续往返。复审时向这两个 ID 发送新一轮任务；原 Agent 已不可用时重新派生并记录新 ID。不要把只会排队、不会唤醒已结束 Agent 的消息发送当作已完成复审。
+这是通过完整角色指令主动调用真实子 Agent，不声称已经加载原生自定义角色。`agents/openai.yaml` 只提供技能展示信息；使用本技能不需要向 `.codex/agents/` 或全局配置复制文件，不执行注册或安装命令。仓库保留的原生角色副本仅供旧用法兼容，不能作为当前调用的前提。
+
+保存两个子 Agent 的实际 ID，等待双方首轮结果后交换结论，让 A 回应 B 的质疑，再将 A 的回应交给 B 复核。已结束的 Agent 使用能唤醒新回合的接口（如 `followup_task`），不能仅用只排队的消息接口就声称完成。修订后的复审主动向两个 ID 发起新任务；Agent 已不可用时，用同样的完整指令重新派生并记录新 ID。
+
+调用失败时保留错误和失败阶段，只有实际收到子 Agent 的结果才能记为完成。若父历史不可用（如 `no rollout found for thread id`），确认使用不复制历史并显式传材料的方式重试；仍失败则报告受阻，不让主 Agent 分饰两角替代真实调用。
 
 ## 执行流程
 
