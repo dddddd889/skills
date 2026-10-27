@@ -1,7 +1,7 @@
 interface:
   display_name: "通用对抗审查"
   short_description: "反复扫描对象及上下游，由两个 Agent 相互质疑补漏，修订后循环复审"
-  default_prompt: "使用 $design-plan-review 审查我指定的对象：每轮完整扫描、A/B 对抗及授权修订验证后交付完整状态；下一轮新建无旧对话历史的 A/B，先独立审查真实材料，再核对上一状态，独立验收后给出最终结论。"
+  default_prompt: "使用 $design-plan-review 审查我指定的对象：每轮完整扫描、A/B 对抗并交付完整状态，无问题即结束，有问题才修订并用新 Agent 复审，默认最多 3 轮；到上限仍有问题就明确报告，严重问题请我决策。"
 
 policy:
   allow_implicit_invocation: false
